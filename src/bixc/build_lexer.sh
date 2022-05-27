@@ -1,0 +1,1 @@
+eval "java -jar /usr/local/lib/antlr-4.9.2-complete.jar ./BixLexer.g4 -Dlanguage=CSharp -o ./Compiler/Lexer/"
