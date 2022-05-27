@@ -1,0 +1,1 @@
+eval "java -jar /usr/local/bin/antlr-4.10.1-complete.jar ./BixParser.g4 -Dlangauge=CSharp -o ./Compiler/Parser -no-listener -visitor"

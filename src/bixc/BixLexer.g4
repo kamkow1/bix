@@ -4,6 +4,8 @@ options {
     language = CSharp;
 }
 
+VAL                 : 'val';
+
 // values
 STR_VAL             : '"' (~[\\"\r\n])* '"';
 INT_VAL             : '-'? '0'..'9'+;
