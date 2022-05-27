@@ -13,6 +13,9 @@ file_content:
 block:
         RBRACE statement* LBRACE;
 
+class:
+        CLASS IDENTIFIER block;
+
 method:
         FNC IDENTIFIER LPAREN (IDENTIFIER (COMMA IDENTIFIER))? RPAREN block;
 
