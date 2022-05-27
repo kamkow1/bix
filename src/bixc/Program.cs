@@ -1,6 +1,8 @@
 ﻿using Colorify;
 using Colorify.UI;
 using McMaster.Extensions.CommandLineUtils;
+using Compiler;
+
 
 var colorify = new Format(Theme.Dark);
 
@@ -17,7 +19,7 @@ app.Command("build", cmd =>
 
     var filePathArg = cmd.Argument("[root]", "path to a bix project");
 
-    cmd.OnExecute(() => 
+    cmd.OnExecute(async () => 
     {
         var filePath = filePathArg.Value;
 
@@ -27,7 +29,9 @@ app.Command("build", cmd =>
             return;
         }
             
-        Console.WriteLine($"passed arg {filePath}");
+        var targetFile = await File.ReadAllTextAsync(filePath);
+
+        CompilationExecutor.Compile(targetFile);
     });
 });
 
