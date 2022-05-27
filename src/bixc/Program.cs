@@ -31,7 +31,7 @@ app.Command("build", cmd =>
             
         var targetFile = File.ReadAllText(filePath);
 
-        CompilationExecutor.Compile(targetFile);
+        CompilationExecutor.Compile(targetFile, Path.GetFileName(filePath));
     });
 });
 

@@ -4,7 +4,7 @@ namespace Compiler;
 
 public static class CompilationExecutor
 {
-    public static void Compile(string fileContent) 
+    public static void Compile(string fileContent, string fileName) 
     {
         Console.WriteLine(fileContent);
 
@@ -17,5 +17,7 @@ public static class CompilationExecutor
         var visitor             = new AstVisitor(); 
 
         visitor.Visit(parseContext);
+
+        
     }
 }
