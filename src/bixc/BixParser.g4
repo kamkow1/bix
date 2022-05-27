@@ -10,6 +10,12 @@ parse: file_content EOF;
 file_content:
         statement*;
 
+block:
+        RBRACE statement* LBRACE;
+
+method:
+        FNC IDENTIFIER LPAREN (IDENTIFIER (COMMA IDENTIFIER))? RPAREN block;
+
 statement:
         expression              TERMINATOR
     |   assign_variable         TERMINATOR;
