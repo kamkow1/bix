@@ -5,6 +5,8 @@ options {
 }
 
 VAL                 : 'val';
+FNC                 : 'fnc';
+CLASS               : 'class';
 
 // values
 STR_VAL             : '"' (~[\\"\r\n])* '"';
