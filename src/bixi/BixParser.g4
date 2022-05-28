@@ -1,7 +1,7 @@
 parser grammar BixParser;
 
 options {
-    tokenVocab='./Compiler/Lexer/BixLexer';
+    tokenVocab='./Interpreter/Lexer/BixLexer';
     language=CSharp;
 }
 

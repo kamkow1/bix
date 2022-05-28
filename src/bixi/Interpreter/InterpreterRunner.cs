@@ -1,10 +1,10 @@
 using Antlr4.Runtime;
 
-namespace Compiler;
+namespace Interpreter;
 
-public static class CompilationExecutor
+public static class InterpreterRunner
 {
-    public static void Compile(string fileContent, string fileName) 
+    public static void Run(string fileContent, string fileName) 
     {
         Console.WriteLine(fileContent);
 

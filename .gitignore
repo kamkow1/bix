@@ -1,7 +1,7 @@
 # build
-src/bixc/bin/
-src/bixc/obj/
+src/bixi/bin/
+src/bixi/obj/
 
 # anltr generated
-src/bixc/Compiler/Lexer/
-src/bixc/Compiler/Parser/
+src/bixi/Interpreter/Lexer/
+src/bixi/Interpreter/Parser/

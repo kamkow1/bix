@@ -1,7 +1,7 @@
 using Antlr4.Runtime.Misc;
 using Newtonsoft.Json;
 
-namespace Compiler;
+namespace Interpreter;
 
 public class AstVisitor : BixParserBaseVisitor<object?>
 {
@@ -20,6 +20,13 @@ public class AstVisitor : BixParserBaseVisitor<object?>
 
         Console.WriteLine($"{name} = {value}");
         return true;
+    }
+
+    public override object? VisitLambda([NotNull] BixParser.LambdaContext context)
+    {
+        var parameters = context.IDENTIFIER().Select(p => p.GetText()).ToArray();
+        Console.WriteLine(JsonConvert.SerializeObject(parameters, Formatting.Indented));
+        return null;
     }
 
     public override object VisitConstant([NotNull] BixParser.ConstantContext context)

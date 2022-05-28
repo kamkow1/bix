@@ -1,7 +1,7 @@
 ﻿using Colorify;
 using Colorify.UI;
 using McMaster.Extensions.CommandLineUtils;
-using Compiler;
+using Interpreter;
 
 
 var colorify = new Format(Theme.Dark);
@@ -31,7 +31,7 @@ app.Command("build", cmd =>
             
         var targetFile = File.ReadAllText(filePath);
 
-        CompilationExecutor.Compile(targetFile, Path.GetFileName(filePath));
+        InterpreterRunner.Run(targetFile, Path.GetFileName(filePath));
     });
 });
 
