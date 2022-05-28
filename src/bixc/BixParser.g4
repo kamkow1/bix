@@ -5,29 +5,30 @@ options {
     language=CSharp;
 }
 
-parse: file_content EOF;
+parse: file_content;
 
 file_content:
         statement*;
 
-block:
-        RBRACE statement* LBRACE;
 
-class:
-        CLASS IDENTIFIER block;
 
-method:
-        FNC IDENTIFIER LPAREN (IDENTIFIER (COMMA IDENTIFIER))? RPAREN block;
 
 statement:
         expression              TERMINATOR
     |   assign_variable         TERMINATOR;
 
+lambda:
+        FNC LPAREN (IDENTIFIER (COMMA IDENTIFIER)*)? RPAREN block;
+
+block:
+        LBRACE (statement*)? RBRACE;
+
 assign_variable:
         VAL IDENTIFIER ASSIGN expression;
 
 expression:
-        constant;
+        constant
+    |   lambda;
 
 constant:
         STR_VAL

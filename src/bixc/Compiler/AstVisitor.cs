@@ -1,4 +1,5 @@
 using Antlr4.Runtime.Misc;
+using Newtonsoft.Json;
 
 namespace Compiler;
 
@@ -10,6 +11,7 @@ public class AstVisitor : BixParserBaseVisitor<object?>
             Visit(statement);
         return null;
     }
+
 
     public override object VisitAssign_variable([NotNull] BixParser.Assign_variableContext context)
     {

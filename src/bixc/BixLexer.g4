@@ -5,7 +5,7 @@ options {
 }
 
 VAL                 : 'val';
-FNC                 : 'fnc';
+FNC                 : 'func';
 CLASS               : 'class';
 
 // values
@@ -16,7 +16,7 @@ FLT_VAL             : '-'? ('0'..'9')+ '.' ('0'..'9')*;
 // opertators
 ASSIGN              : '=';
 
-TERMINATOR          : ('\r\n' | '\n');
+TERMINATOR          : ';';
 COMMA               : ',';
 LPAREN              : '(';
 RPAREN              : ')';
@@ -24,7 +24,7 @@ LBRACE              : '{';
 RBRACE              : '}';
 
 HASH                : '#';
-IDENTIFIER          : [a-zA-Z_] [a-zA-Z_0-9]*;
-WHITESPACE          : [ \t]+    -> skip;
-COMMENT             : '#*' .*? '*#' -> skip;
-LINE_COMMENT        : '#' ~[\r\n]* -> skip;
+IDENTIFIER          : ('a'..'z' | 'A'..'Z' | '_') ('a'..'z' | 'A' .. 'Z' | '0'..'9' | '_')*;
+WHITESPACE          : [ \r\n\t]+    -> skip;
+COMMENT             : '#*' .*? '*#' -> channel(HIDDEN);
+LINE_COMMENT        : '#' ~[\r\n]* -> channel(HIDDEN);
