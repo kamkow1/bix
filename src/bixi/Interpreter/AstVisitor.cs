@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Dynamic;
 using Antlr4.Runtime.Misc;
 using Newtonsoft.Json;
@@ -8,9 +9,15 @@ public class AstVisitor : BixParserBaseVisitor<object?>
 {
     private Dictionary<string, dynamic?> _environment = new();
 
-    private Functions _functions = new();
-
     private BixTypePrototypes _prototypes = new();
+
+    public AstVisitor()
+    {
+        _environment["io"] = new Variable("io", new BixType {
+            Name = "Io",
+            ProtoType = _prototypes.Prototypes[$"io_proto"]
+        });
+    }
     
     public override object? VisitFile_content([NotNull] BixParser.File_contentContext context)
     {
@@ -33,7 +40,7 @@ public class AstVisitor : BixParserBaseVisitor<object?>
             ProtoType = _prototypes.Prototypes[$"{typeName}_proto"]
         });
 
-        Console.WriteLine(JsonConvert.SerializeObject(_prototypes.Prototypes[$"{typeName}_proto"], Formatting.Indented));
+        //Console.WriteLine(JsonConvert.SerializeObject(_prototypes.Prototypes[$"{typeName}_proto"], Formatting.Indented));
 
         _environment.Add(name, variable);
 
@@ -44,7 +51,7 @@ public class AstVisitor : BixParserBaseVisitor<object?>
     public override object? VisitLambda([NotNull] BixParser.LambdaContext context)
     {
         var parameters = context.IDENTIFIER().Select(p => p.GetText()).ToArray();
-        Console.WriteLine(JsonConvert.SerializeObject(parameters, Formatting.Indented));
+        //Console.WriteLine(JsonConvert.SerializeObject(parameters, Formatting.Indented));
         return null;
     }
 
@@ -62,11 +69,12 @@ public class AstVisitor : BixParserBaseVisitor<object?>
 
     public override object VisitFunction_call([NotNull] BixParser.Function_callContext context)
     {
-        var args = new List<object?>();
+        /*var args = new List<object?>();
         foreach(var expr in context.expression())
             args.Add(Visit(expr));
 
-        return _functions.CallFunction(context.IDENTIFIER().GetText(), args.ToArray());
+        return _functions.CallFunction(context.IDENTIFIER().GetText(), args.ToArray());*/
+        return "30300303";
     }
 
     public override object VisitDef_body([NotNull] BixParser.Def_bodyContext context)
@@ -94,20 +102,18 @@ public class AstVisitor : BixParserBaseVisitor<object?>
         return _environment[context.IDENTIFIER().GetText() ?? throw new Exception("this identifier does not exist!")]!;
     }
 
-    public override object VisitObject_property([NotNull] BixParser.Object_propertyContext context)
+    public override object? VisitObject_property([NotNull] BixParser.Object_propertyContext context)
     {
+
         var obj = _environment[context.IDENTIFIER(0).GetText()];
-        //return obj.GetType().GetProprty(context.IDENTIFIER(1)).GetValue(obj, null);
         dynamic next = new ExpandoObject();
         var counter = 0;
         foreach(var prop in context.IDENTIFIER().Select((value, i) => new { value, i }))
         {
             if (prop.i == 0)
                 continue;
-
             Console.WriteLine(prop.i);
             next = obj.GetType().GetProperty(context.IDENTIFIER(prop.i).GetText());
-
             if (next is not null)
             {
                 obj = next;
@@ -116,7 +122,27 @@ public class AstVisitor : BixParserBaseVisitor<object?>
             }
             else continue;
         }
+        
+        try
+        {
+            if (context.LPAREN() is null)
+                return ((IDictionary<string, object>)obj.Type.ProtoType)[context.IDENTIFIER(counter + 1).GetText()];
 
-        return ((IDictionary<string, object>)obj.Type.ProtoType)[context.IDENTIFIER(counter + 1).GetText()];
+            if (context.expression().Length != 0)
+            {
+                var args = context.expression().Select(Visit).ToArray();
+                Console.WriteLine(JsonConvert.SerializeObject(args, Formatting.Indented));
+
+                return ((Func<object?[], object?>)((IDictionary<string, object>)obj.Type.ProtoType)[context.IDENTIFIER(counter + 1).GetText()])(args);
+            }
+
+            return ((Func<object?>)((IDictionary<string, object>)obj.Type.ProtoType)[context.IDENTIFIER(counter + 1).GetText()])();
+        }
+        catch (System.InvalidCastException)
+        {
+            Console.WriteLine("cannot invoke method with provided argument list!");
+            Environment.Exit(1);
+            return null;
+        }       
     }
 }

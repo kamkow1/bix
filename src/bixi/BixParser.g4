@@ -16,6 +16,7 @@ file_content:
 statement:
         expression              TERMINATOR
     |   assign_variable         TERMINATOR
+    |   object_property         TERMINATOR
     |   function;
 
 lambda:
@@ -37,7 +38,7 @@ assign_variable:
         VAL IDENTIFIER IDENTIFIER ASSIGN expression;
 
 object_property:
-        IDENTIFIER (DOT IDENTIFIER)*;
+        IDENTIFIER ((DOT IDENTIFIER) | (DOT IDENTIFIER LPAREN (expression (COMMA expression)*)? RPAREN))*;
 
 expression:
         constant                #ConstantExpression
