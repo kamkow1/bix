@@ -9,13 +9,13 @@ var colorify = new Format(Theme.Dark);
 var app = new CommandLineApplication
 {
     Name = "bixc",
-    FullName = "bix language compiler",
-    Description = "this is a compiler for a toy language \"bix\" made by kamkow1"
+    FullName = "bix language interpreter",
+    Description = "this is an interpreter for a toy language \"bix\" made by kamkow1"
 };
 
-app.Command("build", cmd => 
+app.Command("run", cmd => 
 {
-    cmd.Description = "build a bix project";
+    cmd.Description = "execute a bix file";
 
     var filePathArg = cmd.Argument("[root]", "path to a bix project");
 
