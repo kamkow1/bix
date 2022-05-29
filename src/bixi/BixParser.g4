@@ -15,20 +15,32 @@ file_content:
 
 statement:
         expression              TERMINATOR
-    |   assign_variable         TERMINATOR;
+    |   assign_variable         TERMINATOR
+    |   function;
 
 lambda:
         FNC LPAREN (IDENTIFIER (COMMA IDENTIFIER)*)? RPAREN block;
+
+function:
+        FNC IDENTIFIER LPAREN (IDENTIFIER (COMMA IDENTIFIER)*)? RPAREN def_body;
+
+def_body:
+        LBRACE (statement*)? RBRACE;
+
+function_call:
+        IDENTIFIER LPAREN (expression (COMMA expression)*)? RPAREN;
 
 block:
         LBRACE (statement*)? RBRACE;
 
 assign_variable:
-        VAL IDENTIFIER ASSIGN expression;
+        VAL IDENTIFIER IDENTIFIER ASSIGN expression;
 
 expression:
-        constant
-    |   lambda;
+        constant                #ConstantExpression
+    |   lambda                  #LambdaExpression
+    |   function_call           #FunctionCallExpression
+    |   IDENTIFIER              #IdentifierExpression;
 
 constant:
         STR_VAL
