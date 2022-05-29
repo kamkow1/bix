@@ -1,0 +1,25 @@
+{
+    "name": "bix",
+    "displayName": "bix-syntax-highlighting",
+    "description": "a syntax highligthing extension for the bix programming language for vscode",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.67.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [{
+            "id": "bix",
+            "aliases": ["bix programming langauge", "bix"],
+            "extensions": [".bix"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "bix",
+            "scopeName": "source.bix",
+            "path": "./syntaxes/bix.tmLanguage.json"
+        }]
+    }
+}
