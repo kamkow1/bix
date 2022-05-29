@@ -1,3 +1,5 @@
 val int test = 999;
 
-io.println("siema");
+io.println("siema", "elomelo");
+
+io.input();

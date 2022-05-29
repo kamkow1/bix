@@ -33,7 +33,7 @@ public class AstVisitor : BixParserBaseVisitor<object?>
         var value = Visit(context.expression());
         var typeName = context.IDENTIFIER(0).GetText();
 
-        Console.WriteLine(typeName);
+        //Console.WriteLine(typeName);
 
         var variable = new Variable(name, new BixType {
             Name = typeName,
@@ -60,7 +60,7 @@ public class AstVisitor : BixParserBaseVisitor<object?>
         var name = context.IDENTIFIER(0).GetText();
 
         var body = Visit(context.def_body());
-        Console.WriteLine(body);
+        //Console.WriteLine(body);
 
         _environment.Add(name, body);
 
@@ -79,7 +79,7 @@ public class AstVisitor : BixParserBaseVisitor<object?>
 
     public override object VisitDef_body([NotNull] BixParser.Def_bodyContext context)
     {
-        Console.WriteLine(context.statement().Select(s => s.GetText()));
+        //Console.WriteLine(context.statement().Select(s => s.GetText()));
         return context.statement();
     }
 
@@ -112,12 +112,12 @@ public class AstVisitor : BixParserBaseVisitor<object?>
         {
             if (prop.i == 0)
                 continue;
-            Console.WriteLine(prop.i);
+            //Console.WriteLine(prop.i);
             next = obj.GetType().GetProperty(context.IDENTIFIER(prop.i).GetText());
             if (next is not null)
             {
                 obj = next;
-                Console.WriteLine(context.IDENTIFIER(prop.i + 1));
+                //Console.WriteLine(context.IDENTIFIER(prop.i + 1));
                 counter = prop.i + 1;
             }
             else continue;
@@ -131,7 +131,7 @@ public class AstVisitor : BixParserBaseVisitor<object?>
             if (context.expression().Length != 0)
             {
                 var args = context.expression().Select(Visit).ToArray();
-                Console.WriteLine(JsonConvert.SerializeObject(args, Formatting.Indented));
+                //Console.WriteLine(JsonConvert.SerializeObject(args, Formatting.Indented));
 
                 return ((Func<object?[], object?>)((IDictionary<string, object>)obj.Type.ProtoType)[context.IDENTIFIER(counter + 1).GetText()])(args);
             }

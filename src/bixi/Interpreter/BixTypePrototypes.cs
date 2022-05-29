@@ -36,6 +36,14 @@ public class BixTypePrototypes
             return null;
         });
 
+        proto.print = new Func<object?[]?, object?>((object?[]? args) => {
+            foreach(var arg in args)
+                Console.Write(arg);
+            return null;
+        });
+
+        proto.input = new Func<object?>(() => Console.ReadLine());
+
         return proto;
     }
 }
