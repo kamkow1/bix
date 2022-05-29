@@ -1,7 +1,4 @@
-val str num = "123";
+val str input = io.input();
 
-val int numAsInt = num.toInt(&self);
-
-val str text = "eoeoeoeoeoe";
-
-io.println(text);
+val int num = input.toInt(&self);
+io.println(num);
