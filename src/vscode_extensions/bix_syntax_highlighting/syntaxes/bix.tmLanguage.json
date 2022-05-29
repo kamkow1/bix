@@ -13,7 +13,7 @@
 		"keywords": {
 			"patterns": [{
 				"name": "keyword.control.bix",
-				"match": "\\b(if|while|for|return)\\b"
+				"match": "\\b(val)\\b"
 			}]
 		},
 		"strings": {
@@ -24,6 +24,29 @@
 				{
 					"name": "constant.character.escape.bix",
 					"match": "\\\\."
+				}
+			]
+		},
+		"comments": {
+			"patterns": [
+				{
+					"begin": "#",
+					"beginCaptures": {
+						"0": {
+							"name": "comment.line"
+						}
+					},
+					"end": "\\n",
+					"name": "comment"
+				},
+				{
+					"captures": {
+						"0": {
+							"name": "comment.block"
+						}
+					},
+					"match": "#\\*\\*#",
+					"name": "comment.block"
 				}
 			]
 		}
