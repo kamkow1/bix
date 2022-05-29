@@ -1,6 +1,4 @@
-using System;
 using System.Dynamic;
-using Newtonsoft.Json;
 
 namespace Interpreter;
 

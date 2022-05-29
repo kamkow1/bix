@@ -1,8 +1,5 @@
-using System.Collections.Generic;
-using System.Linq;
 using System.Dynamic;
 using Antlr4.Runtime.Misc;
-using Newtonsoft.Json;
 
 namespace Interpreter;
 
