@@ -7,6 +7,7 @@ options {
 VAL                 : 'val';
 FNC                 : 'func';
 CLASS               : 'class';
+SELF                : 'self';
 
 // values
 STR_VAL             : '"' (~[\\"\r\n])* '"';
@@ -24,6 +25,7 @@ LBRACE              : '{';
 RBRACE              : '}';
 COLON               : ':';
 DOT                 : '.';
+AMP                 : '&';
 
 HASH                : '#';
 IDENTIFIER          : ('a'..'z' | 'A'..'Z' | '_') ('a'..'z' | 'A' .. 'Z' | '0'..'9' | '_')*;

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Dynamic;
 using Antlr4.Runtime.Misc;
@@ -13,10 +14,14 @@ public class AstVisitor : BixParserBaseVisitor<object?>
 
     public AstVisitor()
     {
-        _environment["io"] = new Variable("io", new BixType {
-            Name = "Io",
-            ProtoType = _prototypes.Prototypes[$"io_proto"]
-        });
+        _environment["io"] = new Variable(
+            "io", 
+            new BixType {
+                Name = "Io",
+                ProtoType = _prototypes.Prototypes[$"io_proto"]
+            },
+            new object()
+        );
     }
     
     public override object? VisitFile_content([NotNull] BixParser.File_contentContext context)
@@ -33,25 +38,23 @@ public class AstVisitor : BixParserBaseVisitor<object?>
         var value = Visit(context.expression());
         var typeName = context.IDENTIFIER(0).GetText();
 
-        //Console.WriteLine(typeName);
-
-        var variable = new Variable(name, new BixType {
-            Name = typeName,
-            ProtoType = _prototypes.Prototypes[$"{typeName}_proto"]
-        });
-
-        //Console.WriteLine(JsonConvert.SerializeObject(_prototypes.Prototypes[$"{typeName}_proto"], Formatting.Indented));
+        var variable = new Variable(
+            name, 
+            new BixType {
+                Name = typeName,
+                ProtoType = _prototypes.Prototypes[$"{typeName}_proto"],
+            },
+            value
+        );
 
         _environment.Add(name, variable);
 
-        //Console.WriteLine("eoeoeoeo" + _environment[name].Type.ProtoType.hello());
         return true;
     }
 
     public override object? VisitLambda([NotNull] BixParser.LambdaContext context)
     {
         var parameters = context.IDENTIFIER().Select(p => p.GetText()).ToArray();
-        //Console.WriteLine(JsonConvert.SerializeObject(parameters, Formatting.Indented));
         return null;
     }
 
@@ -60,7 +63,6 @@ public class AstVisitor : BixParserBaseVisitor<object?>
         var name = context.IDENTIFIER(0).GetText();
 
         var body = Visit(context.def_body());
-        //Console.WriteLine(body);
 
         _environment.Add(name, body);
 
@@ -69,17 +71,11 @@ public class AstVisitor : BixParserBaseVisitor<object?>
 
     public override object VisitFunction_call([NotNull] BixParser.Function_callContext context)
     {
-        /*var args = new List<object?>();
-        foreach(var expr in context.expression())
-            args.Add(Visit(expr));
-
-        return _functions.CallFunction(context.IDENTIFIER().GetText(), args.ToArray());*/
-        return "30300303";
+        throw new Exception("unimplemented");
     }
 
     public override object VisitDef_body([NotNull] BixParser.Def_bodyContext context)
     {
-        //Console.WriteLine(context.statement().Select(s => s.GetText()));
         return context.statement();
     }
 
@@ -99,7 +95,7 @@ public class AstVisitor : BixParserBaseVisitor<object?>
 
     public override object VisitIdentifierExpression([NotNull] BixParser.IdentifierExpressionContext context)
     {
-        return _environment[context.IDENTIFIER().GetText() ?? throw new Exception("this identifier does not exist!")]!;
+        return _environment[context.IDENTIFIER().GetText()]!.Value;
     }
 
     public override object? VisitObject_property([NotNull] BixParser.Object_propertyContext context)
@@ -112,12 +108,10 @@ public class AstVisitor : BixParserBaseVisitor<object?>
         {
             if (prop.i == 0)
                 continue;
-            //Console.WriteLine(prop.i);
             next = obj.GetType().GetProperty(context.IDENTIFIER(prop.i).GetText());
             if (next is not null)
             {
                 obj = next;
-                //Console.WriteLine(context.IDENTIFIER(prop.i + 1));
                 counter = prop.i + 1;
             }
             else continue;
@@ -130,10 +124,16 @@ public class AstVisitor : BixParserBaseVisitor<object?>
 
             if (context.expression().Length != 0)
             {
-                var args = context.expression().Select(Visit).ToArray();
-                //Console.WriteLine(JsonConvert.SerializeObject(args, Formatting.Indented));
+                var expressionArgs = context.expression().Select(Visit).ToArray();
+                
+                var args = new List<object>();
+                foreach(var arg in expressionArgs)
+                {
+                    if (_environment.TryGetValue(arg.ToString(), out var result))
+                        args.Add(result.Value);
+                }
 
-                return ((Func<object?[], object?>)((IDictionary<string, object>)obj.Type.ProtoType)[context.IDENTIFIER(counter + 1).GetText()])(args);
+                return ((Func<object?[], object?>)((IDictionary<string, object>)obj.Type.ProtoType)[context.IDENTIFIER(counter + 1).GetText()])(context.expression()[0].GetText().Contains("self") ? args.ToArray() : expressionArgs.ToArray());
             }
 
             return ((Func<object?>)((IDictionary<string, object>)obj.Type.ProtoType)[context.IDENTIFIER(counter + 1).GetText()])();
@@ -144,5 +144,10 @@ public class AstVisitor : BixParserBaseVisitor<object?>
             Environment.Exit(1);
             return null;
         }       
+    }
+
+    public override object VisitSelfExpression([NotNull] BixParser.SelfExpressionContext context)
+    {
+        return context.Parent.GetChild(context.Parent.ChildCount - 6).GetText();
     }
 }

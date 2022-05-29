@@ -6,9 +6,13 @@ public class Variable
 
     public BixType Type { get; set; }
 
-    public Variable(string name, BixType type)
+    
+    public object? Value { get; set; }
+
+    public Variable(string name, BixType type, object? value)
     {
         VariableName = name;
         Type = type;
+        Value = value;
     }
 }

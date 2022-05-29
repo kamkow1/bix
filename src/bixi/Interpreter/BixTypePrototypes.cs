@@ -1,5 +1,6 @@
 using System;
 using System.Dynamic;
+using Newtonsoft.Json;
 
 namespace Interpreter;
 
@@ -10,6 +11,8 @@ public class BixTypePrototypes
     public BixTypePrototypes()
     {
         Prototypes["int_proto"] = CreateIntPrototype();
+        Prototypes["str_proto"] = CreateStringPrototype();
+
         Prototypes["io_proto"] = CreateIoPrototype();
     }
 
@@ -17,10 +20,15 @@ public class BixTypePrototypes
     {
         dynamic proto = new ExpandoObject();
 
-        proto.siema = "haha";
-        proto.lol = new Func<object?>(() => {
-            Console.WriteLine("hihihihihihi");
-            return "null";
+        return proto;
+    }
+    
+    private ExpandoObject CreateStringPrototype()
+    {
+        dynamic proto = new ExpandoObject();
+
+        proto.toInt = new Func<object?[], object?>((object?[] arg) => {
+            return int.Parse(arg[0] as string);
         });
 
         return proto;

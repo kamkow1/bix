@@ -44,6 +44,7 @@ expression:
         constant                #ConstantExpression
     |   lambda                  #LambdaExpression
     |   function_call           #FunctionCallExpression
+    |   AMP SELF                #SelfExpression
     |   IDENTIFIER              #IdentifierExpression
     |   object_property         #ObjectProtertyExpression;
 
