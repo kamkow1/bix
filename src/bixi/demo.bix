@@ -1,1 +1,5 @@
 val int test = 999;
+
+print(test.siema);
+
+print("eooeoeooe");

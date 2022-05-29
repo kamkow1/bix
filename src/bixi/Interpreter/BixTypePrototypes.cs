@@ -16,7 +16,8 @@ public class BixTypePrototypes
     {
         dynamic proto = new ExpandoObject();
 
-        proto.hello = new Func<string>(() => "eoeooeo");
+        //proto.hello = new Func<string>(() => "eoeooeo");
+        proto.siema = "haha";
 
         return proto;
     }

@@ -1,3 +1,4 @@
+using System.Dynamic;
 using Antlr4.Runtime.Misc;
 using Newtonsoft.Json;
 
@@ -25,14 +26,18 @@ public class AstVisitor : BixParserBaseVisitor<object?>
         var value = Visit(context.expression());
         var typeName = context.IDENTIFIER(0).GetText();
 
+        Console.WriteLine(typeName);
+
         var variable = new Variable(name, new BixType {
             Name = typeName,
             ProtoType = _prototypes.Prototypes[$"{typeName}_proto"]
         });
 
+        Console.WriteLine(JsonConvert.SerializeObject(_prototypes.Prototypes[$"{typeName}_proto"], Formatting.Indented));
+
         _environment.Add(name, variable);
 
-        Console.WriteLine("eoeoeoeo" + _environment[name].Type.ProtoType.hello());
+        //Console.WriteLine("eoeoeoeo" + _environment[name].Type.ProtoType.hello());
         return true;
     }
 
@@ -87,5 +92,31 @@ public class AstVisitor : BixParserBaseVisitor<object?>
     public override object VisitIdentifierExpression([NotNull] BixParser.IdentifierExpressionContext context)
     {
         return _environment[context.IDENTIFIER().GetText() ?? throw new Exception("this identifier does not exist!")]!;
+    }
+
+    public override object VisitObject_property([NotNull] BixParser.Object_propertyContext context)
+    {
+        var obj = _environment[context.IDENTIFIER(0).GetText()];
+        //return obj.GetType().GetProprty(context.IDENTIFIER(1)).GetValue(obj, null);
+        dynamic next = new ExpandoObject();
+        var counter = 0;
+        foreach(var prop in context.IDENTIFIER().Select((value, i) => new { value, i }))
+        {
+            if (prop.i == 0)
+                continue;
+
+            Console.WriteLine(prop.i);
+            next = obj.GetType().GetProperty(context.IDENTIFIER(prop.i).GetText());
+
+            if (next is not null)
+            {
+                obj = next;
+                Console.WriteLine(context.IDENTIFIER(prop.i + 1));
+                counter = prop.i + 1;
+            }
+            else continue;
+        }
+
+        return ((IDictionary<string, object>)obj.Type.ProtoType)[context.IDENTIFIER(counter + 1).GetText()];
     }
 }

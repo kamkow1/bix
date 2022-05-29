@@ -36,11 +36,15 @@ block:
 assign_variable:
         VAL IDENTIFIER IDENTIFIER ASSIGN expression;
 
+object_property:
+        IDENTIFIER (DOT IDENTIFIER)*;
+
 expression:
         constant                #ConstantExpression
     |   lambda                  #LambdaExpression
     |   function_call           #FunctionCallExpression
-    |   IDENTIFIER              #IdentifierExpression;
+    |   IDENTIFIER              #IdentifierExpression
+    |   object_property         #ObjectProtertyExpression;
 
 constant:
         STR_VAL
