@@ -6,8 +6,6 @@ public static class InterpreterRunner
 {
     public static void Run(string fileContent, string fileName) 
     {
-        Console.WriteLine(fileContent);
-
         var inputStream         = new AntlrInputStream(fileContent);
         var lexer               = new BixLexer(inputStream);
         var commonTokenStream   = new CommonTokenStream(lexer);
@@ -16,8 +14,6 @@ public static class InterpreterRunner
         var parseContext        = parser.parse();
         var visitor             = new AstVisitor(); 
 
-        visitor.Visit(parseContext);
-
-        
+        visitor.Visit(parseContext); 
     }
 }
